@@ -1,36 +1,36 @@
-// Initialize todos
+// Inisialisasi todo dari localStorage atau array kosong
 let todo = JSON.parse(localStorage.getItem('todos')) || [];
-let currentFilter = 'all'; // Default filter
+let currentFilter = 'all'; // Filter default
 
-// Migration: Ensure all todos have valid fields
+// Migrasi: Pastikan semua todo memiliki kolom yang valid
 todo = todo.map(t => {
     return {
         id: t.id || Date.now() + Math.random(),
         task: t.task,
         date: t.date,
         completed: t.completed,
-        priority: t.priority || 'low' // Default priority
+        priority: t.priority || 'low' // Prioritas default
     };
 });
 saveTodos();
 
-// Helper to save
+// Fungsi pembantu untuk menyimpan ke localStorage
 function saveTodos() {
     try {
         localStorage.setItem('todos', JSON.stringify(todo));
     } catch (e) {
-        console.error("Storage failed:", e);
+        console.error("Gagal menyimpan:", e);
     }
 }
 
-// Add Todo
+// Fungsi Tambah Todo
 window.addTodo = function () {
     const todoInput = document.getElementById("todo-input");
     const todoDate = document.getElementById("todo-date");
     const todoPriority = document.getElementById("todo-priority");
 
     if (todoInput.value.trim() === "") {
-        alert("Please enter a task!");
+        alert("Mohon masukkan tugas!");
         return;
     }
 
@@ -38,7 +38,7 @@ window.addTodo = function () {
         id: Date.now(),
         task: todoInput.value,
         date: todoDate.value,
-        priority: todoPriority.value, // Capture priority
+        priority: todoPriority.value, // Ambil nilai prioritas
         completed: false
     };
 
@@ -48,18 +48,18 @@ window.addTodo = function () {
 
     todoInput.value = "";
     todoDate.value = "";
-    // Keep priority as is or reset? Resetting to low is safer
+    // Reset ke low agar aman
     todoPriority.value = "low";
 }
 
-// Delete Todo
+// Fungsi Hapus Todo
 window.deleteTodo = function (id) {
     todo = todo.filter(t => t.id !== id);
     saveTodos();
     renderTodos();
 }
 
-// Toggle Complete
+// Fungsi Ubah Status Selesai (Toggle)
 window.toggleComplete = function (id) {
     todo = todo.map(t => {
         if (t.id === id) {
@@ -71,30 +71,23 @@ window.toggleComplete = function (id) {
     renderTodos();
 }
 
-// Filter Logic
+// Logika Filter
 window.setFilter = function (filterType) {
     currentFilter = filterType;
     renderTodos();
 
-    // Update Button Styles
+    // Perbarui Gaya Tombol
     const buttons = document.querySelectorAll('.filter-btn');
     buttons.forEach(btn => {
-        // Reset all to gray/default
+        // Reset semua ke warna abu-abu/default
         btn.classList.remove('bg-blue-500', 'text-white');
         btn.classList.add('bg-gray-200', 'text-gray-700');
-
-        // Highlight active
-        // Note: This relies on manual matching since buttons invoke onclick with string
-        // We can check text content or just re-render UI based on state later.
-        // Simple hack: matching text content approximately or passing element reference.
-        // For now, simpler: just re-render is enough logic-wise, visual update is bonus.
     });
 
-    // Re-apply active class based on the text matching the filter logic usually...
-    // Let's do a quick visual update based on the text content in local scope
+    // Terapkan kembali warna aktif (biru) pada tombol yang sesuai
     buttons.forEach(btn => {
         const txt = btn.innerText.toLowerCase();
-        // custom mapping
+        // Pemetaan manual
         let match = false;
         if (filterType === 'all' && txt === 'all') match = true;
         if (filterType === 'completed' && txt === 'done') match = true;
@@ -109,7 +102,7 @@ window.setFilter = function (filterType) {
     });
 }
 
-// Reset All Event Listener (Wrapped in DOMContentLoaded for safety)
+// Event Listener untuk Reset Semua (Included dalam DOMContentLoaded agar aman)
 document.addEventListener('DOMContentLoaded', () => {
     const clearBtn = document.getElementById('btn-clear-all');
     if (clearBtn) {
@@ -121,20 +114,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Initial Render call
+    // Panggilan Render Awal
     renderTodos();
-    // Set initial filter active state visual
+    // Set status visual filter awal menjadi aktif
     window.setFilter('all');
 });
 
-// Render logic
+// Logika Render (Menampilkan daftar ke layar)
 function renderTodos() {
     const todoList = document.getElementById('todo-list');
     if (!todoList) return;
 
     todoList.innerHTML = '';
 
-    // Filter Logic Implementation
+    // Implementasi Logika Filter
     let filteredTodo = todo;
     if (currentFilter === 'completed') {
         filteredTodo = todo.filter(t => t.completed);
@@ -143,7 +136,7 @@ function renderTodos() {
     }
 
     if (filteredTodo.length === 0) {
-        todoList.innerHTML = '<li class="text-center text-gray-400 py-4">No tasks found...</li>';
+        todoList.innerHTML = '<li class="text-center text-gray-400 py-4">Tidak ada tugas ditemukan...</li>';
         return;
     }
 
@@ -152,11 +145,14 @@ function renderTodos() {
         const lineThrough = item.completed ? 'line-through text-gray-400' : 'text-gray-800';
         const idSafe = item.id;
 
-        // Priority Badge Color
+        // Warna Badge Prioritas
         let priorityColor = "bg-gray-200 text-gray-700";
         if (item.priority === 'high') priorityColor = "bg-red-100 text-red-700 border-red-200";
         if (item.priority === 'medium') priorityColor = "bg-yellow-100 text-yellow-700 border-yellow-200";
         if (item.priority === 'low') priorityColor = "bg-green-100 text-green-700 border-green-200";
+
+        // Tampilan tanggal yang lebih rapi
+        const displayDate = item.date ? item.date.replace('T', ' jam ') : '';
 
         todoList.innerHTML += `
         <li class="flex items-center justify-between bg-gray-50 p-3 rounded-md border text-left shadow-sm gap-2">
@@ -166,7 +162,7 @@ function renderTodos() {
                 <div class="flex flex-col flex-1 min-w-0">
                     <div class="flex items-center gap-2 mb-1">
                         <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded border ${priorityColor}">${item.priority || 'low'}</span>
-                        ${item.date ? `<span class="text-xs text-gray-400">${item.date.replace('T', ' ')}</span>` : ''}
+                        ${displayDate ? `<span class="text-xs text-gray-400">Tenggat: ${displayDate}</span>` : ''}
                     </div>
                     <span class="${lineThrough} text-lg font-medium break-words leading-tight">${item.task}</span>
                 </div>
