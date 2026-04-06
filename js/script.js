@@ -1,178 +1,113 @@
-// Inisialisasi todo dari localStorage atau array kosong
-let todo = JSON.parse(localStorage.getItem('todos')) || [];
-let currentFilter = 'all'; // Filter default
+const menuBtn = document.getElementById('menu-btn');
+const nav = document.getElementById('main-nav');
 
-// Migrasi: Pastikan semua todo memiliki kolom yang valid
-todo = todo.map(t => {
-    return {
-        id: t.id || Date.now() + Math.random(),
-        task: t.task,
-        date: t.date,
-        completed: t.completed,
-        priority: t.priority || 'low' // Prioritas default
-    };
-});
-saveTodos();
+if (menuBtn && nav) {
+    menuBtn.addEventListener('click', () => {
+        nav.classList.toggle('open');
+    });
 
-// Fungsi pembantu untuk menyimpan ke localStorage
-function saveTodos() {
-    try {
-        localStorage.setItem('todos', JSON.stringify(todo));
-    } catch (e) {
-        console.error("Gagal menyimpan:", e);
-    }
+    nav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => nav.classList.remove('open'));
+    });
 }
 
-// Fungsi Tambah Todo
-window.addTodo = function () {
-    const todoInput = document.getElementById("todo-input");
-    const todoDate = document.getElementById("todo-date");
-    const todoPriority = document.getElementById("todo-priority");
+const counters = document.querySelectorAll('.count');
+const statsGrid = document.getElementById('stats-grid');
 
-    if (todoInput.value.trim() === "") {
-        alert("Mohon masukkan tugas!");
-        return;
-    }
+const animateCounter = (el) => {
+    const target = Number(el.dataset.target || 0);
+    const duration = 1400;
+    const start = performance.now();
 
-    const todoObj = {
-        id: Date.now(),
-        task: todoInput.value,
-        date: todoDate.value,
-        priority: todoPriority.value, // Ambil nilai prioritas
-        completed: false
+    const tick = (now) => {
+        const progress = Math.min((now - start) / duration, 1);
+        const value = Math.floor(progress * target);
+        el.textContent = new Intl.NumberFormat('id-ID').format(value) + (target > 999999 ? '+' : '');
+        if (progress < 1) requestAnimationFrame(tick);
     };
 
-    todo.push(todoObj);
-    saveTodos();
-    renderTodos();
+    requestAnimationFrame(tick);
+};
 
-    todoInput.value = "";
-    todoDate.value = "";
-    // Reset ke low agar aman
-    todoPriority.value = "low";
-}
-
-// Fungsi Hapus Todo
-window.deleteTodo = function (id) {
-    todo = todo.filter(t => t.id !== id);
-    saveTodos();
-    renderTodos();
-}
-
-// Fungsi Ubah Status Selesai (Toggle)
-window.toggleComplete = function (id) {
-    todo = todo.map(t => {
-        if (t.id === id) {
-            return { ...t, completed: !t.completed };
-        }
-        return t;
-    });
-    saveTodos();
-    renderTodos();
-}
-
-// Logika Filter
-window.setFilter = function (filterType) {
-    currentFilter = filterType;
-    renderTodos();
-
-    // Perbarui Gaya Tombol
-    const buttons = document.querySelectorAll('.filter-btn');
-    buttons.forEach(btn => {
-        // Reset semua ke warna abu-abu/default
-        btn.classList.remove('bg-blue-500', 'text-white');
-        btn.classList.add('bg-gray-200', 'text-gray-700');
-    });
-
-    // Terapkan kembali warna aktif (biru) pada tombol yang sesuai
-    buttons.forEach(btn => {
-        const txt = btn.innerText.toLowerCase();
-        // Pemetaan manual
-        let match = false;
-        if (filterType === 'all' && txt === 'all') match = true;
-        if (filterType === 'completed' && txt === 'done') match = true;
-        if (filterType === 'high' && txt === 'high') match = true;
-        if (filterType === 'medium' && txt === 'medium') match = true;
-        if (filterType === 'low' && txt === 'low') match = true;
-
-        if (match) {
-            btn.classList.remove('bg-gray-200', 'text-gray-700');
-            btn.classList.add('bg-blue-500', 'text-white');
-        }
-    });
-}
-
-// Event Listener untuk Reset Semua (Included dalam DOMContentLoaded agar aman)
-document.addEventListener('DOMContentLoaded', () => {
-    const clearBtn = document.getElementById('btn-clear-all');
-    if (clearBtn) {
-        clearBtn.addEventListener('click', () => {
-            if (todo.length === 0) return;
-            todo = [];
-            saveTodos();
-            renderTodos();
+if (statsGrid && counters.length) {
+    const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                counters.forEach(animateCounter);
+                obs.disconnect();
+            }
         });
+    }, { threshold: 0.25 });
+
+    observer.observe(statsGrid);
+}
+
+const testimonials = [
+    {
+        quote: '“Program ini membuat kami paham cara membangun bisnis sosial yang tidak hanya idealis, tapi juga berkelanjutan.”',
+        author: '— Aisyah, Founder DaurBerkah'
+    },
+    {
+        quote: '“Mentornya sangat relevan. Dalam 4 bulan, omzet kami naik 2,3x dan dampak sosial kami lebih terukur.”',
+        author: '— Rio, Co-Founder TaniLokal'
+    },
+    {
+        quote: '“Jejaring partner dari SosioTumbuh membuka peluang kolaborasi yang sebelumnya tidak pernah kami bayangkan.”',
+        author: '— Meilani, CEO KelasUntukSemua'
     }
+];
 
-    // Panggilan Render Awal
-    renderTodos();
-    // Set status visual filter awal menjadi aktif
-    window.setFilter('all');
-});
+const quoteEl = document.getElementById('testimonial-quote');
+const authorEl = document.getElementById('testimonial-author');
+const dotsEl = document.getElementById('testimonial-dots');
+let currentIndex = 0;
 
-// Logika Render (Menampilkan daftar ke layar)
-function renderTodos() {
-    const todoList = document.getElementById('todo-list');
-    if (!todoList) return;
+function renderTestimonial(index) {
+    if (!quoteEl || !authorEl || !dotsEl) return;
 
-    todoList.innerHTML = '';
+    quoteEl.textContent = testimonials[index].quote;
+    authorEl.textContent = testimonials[index].author;
 
-    // Implementasi Logika Filter
-    let filteredTodo = todo;
-    if (currentFilter === 'completed') {
-        filteredTodo = todo.filter(t => t.completed);
-    } else if (currentFilter !== 'all') {
-        filteredTodo = todo.filter(t => t.priority === currentFilter);
-    }
+    dotsEl.querySelectorAll('.dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+    });
+}
 
-    if (filteredTodo.length === 0) {
-        todoList.innerHTML = '<li class="text-center text-gray-400 py-4">Tidak ada tugas ditemukan...</li>';
-        return;
-    }
+if (dotsEl) {
+    testimonials.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = `dot ${i === 0 ? 'active' : ''}`;
+        dot.setAttribute('aria-label', `Tampilkan testimoni ${i + 1}`);
+        dot.addEventListener('click', () => {
+            currentIndex = i;
+            renderTestimonial(currentIndex);
+        });
+        dotsEl.appendChild(dot);
+    });
 
-    filteredTodo.forEach(item => {
-        const isChecked = item.completed ? 'checked' : '';
-        const lineThrough = item.completed ? 'line-through text-gray-400' : 'text-gray-800';
-        const idSafe = item.id;
+    setInterval(() => {
+        currentIndex = (currentIndex + 1) % testimonials.length;
+        renderTestimonial(currentIndex);
+    }, 5000);
+}
 
-        // Warna Badge Prioritas
-        let priorityColor = "bg-gray-200 text-gray-700";
-        if (item.priority === 'high') priorityColor = "bg-red-100 text-red-700 border-red-200";
-        if (item.priority === 'medium') priorityColor = "bg-yellow-100 text-yellow-700 border-yellow-200";
-        if (item.priority === 'low') priorityColor = "bg-green-100 text-green-700 border-green-200";
+const form = document.getElementById('join-form');
+const formMsg = document.getElementById('form-msg');
 
-        // Tampilan tanggal yang lebih rapi
-        const displayDate = item.date ? item.date.replace('T', ' jam ') : '';
+if (form && formMsg) {
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const focus = document.getElementById('focus').value;
 
-        todoList.innerHTML += `
-        <li class="flex items-center justify-between bg-gray-50 p-3 rounded-md border text-left shadow-sm gap-2">
-            <div class="flex items-center gap-3 overflow-hidden flex-1 min-w-0">
-                <input type="checkbox" ${isChecked} onchange="toggleComplete(${idSafe})" class="flex-shrink-0 w-5 h-5 text-blue-500 rounded focus:ring-blue-500 cursor-pointer">
-                
-                <div class="flex flex-col flex-1 min-w-0">
-                    <div class="flex items-center gap-2 mb-1">
-                        <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded border ${priorityColor}">${item.priority || 'low'}</span>
-                        ${displayDate ? `<span class="text-xs text-gray-400">Tenggat: ${displayDate}</span>` : ''}
-                    </div>
-                    <span class="${lineThrough} text-lg font-medium break-words leading-tight">${item.task}</span>
-                </div>
-            </div>
-            
-            <button onclick="deleteTodo(${idSafe})" class="flex-shrink-0 text-red-400 hover:text-red-600 p-2 transition" type="button">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                </svg>
-            </button>
-        </li>`;
+        if (!name || !email || !focus) {
+            formMsg.textContent = 'Mohon lengkapi semua data sebelum mengirim.';
+            return;
+        }
+
+        formMsg.textContent = `Terima kasih, ${name}! Tim kami akan menghubungi Anda di ${email}.`;
+        form.reset();
     });
 }
