@@ -1,88 +1,192 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo List - Hanan</title>
-
-    <!-- CSS External File -->
+    <title>SosioTumbuh — Platform Wirausaha Sosial</title>
+    <meta name="description"
+        content="SosioTumbuh membantu calon wirausaha sosial membangun dampak berkelanjutan melalui pendampingan, pembelajaran, dan kolaborasi komunitas.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
 <body>
-    <div class="min-h-screen bg-blue-100 py-10 px-4 flex items-center justify-center">
-        <div class="w-full max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-            <!-- Header -->
-            <header class="mb-8 text-center">
-                <h1 class="text-3xl font-bold text-gray-800">My Todo List</h1>
-                <p class="text-gray-500 text-sm mt-1">Hanan Dimas Prasetya</p>
-            </header>
+    <header class="topbar">
+        <div class="container nav-wrap">
+            <a href="#home" class="logo">Sosio<span>Tumbuh</span></a>
+            <nav class="nav" id="main-nav">
+                <a href="#tentang">Tentang</a>
+                <a href="#program">Program</a>
+                <a href="#dampak">Dampak</a>
+                <a href="#testimoni">Testimoni</a>
+                <a href="#faq">FAQ</a>
+                <a href="#kontak" class="btn btn-small">Gabung</a>
+            </nav>
+            <button class="menu-btn" id="menu-btn" aria-label="Toggle menu">☰</button>
+        </div>
+    </header>
 
-            <!-- Input Section -->
-            <section class="mb-6">
-                <form onsubmit="event.preventDefault(); addTodo();" class="flex flex-col md:flex-row gap-3">
-                    <div class="flex flex-col flex-1 gap-2">
-                        <input type="text" id="todo-input"
-                            class="w-full border-2 border-gray-300 rounded-md p-2 focus:border-blue-500 outline-none"
-                            placeholder="What needs to be done?">
+    <main id="home">
+        <section class="hero">
+            <div class="container hero-grid">
+                <div>
+                    <p class="chip">Ekosistem Wirausaha Sosial Indonesia</p>
+                    <h1>Bangun Bisnis, Ciptakan Dampak Sosial Nyata.</h1>
+                    <p class="lead">Kami membantu pelaku wirausaha sosial naik kelas lewat pelatihan, inkubasi, akses
+                        pendanaan, dan jejaring kolaborasi lintas sektor.</p>
+                    <div class="cta-row">
+                        <a href="#kontak" class="btn">Daftar Inkubasi</a>
+                        <a href="#program" class="btn btn-ghost">Lihat Program</a>
                     </div>
-
-                    <div class="flex gap-2">
-                        <select id="todo-priority"
-                            class="border-2 border-gray-300 rounded-md p-2 outline-none cursor-pointer bg-white"
-                            title="Select Priority">
-                            <option value="low">Low</option>
-                            <option value="medium">Medium</option>
-                            <option value="high">High</option>
-                        </select>
-                        <input type="datetime-local" id="todo-date"
-                            class="border-2 border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-
-                    <button type="submit"
-                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-md transition duration-200 shadow-md">
-                        Add
-                    </button>
-                </form>
-            </section>
-
-            <!-- List Section -->
-            <section>
-                <div class="flex flex-col gap-4 mb-4">
-                    <!-- Filter Buttons -->
-                    <div class="flex flex-wrap gap-2 justify-center" id="filter-container">
-                        <button onclick="setFilter('all')"
-                            class="filter-btn px-3 py-1 rounded-full text-sm font-medium bg-blue-500 text-white shadow-sm transition">All</button>
-                        <button onclick="setFilter('high')"
-                            class="filter-btn px-3 py-1 rounded-full text-sm font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition">High</button>
-                        <button onclick="setFilter('medium')"
-                            class="filter-btn px-3 py-1 rounded-full text-sm font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition">Medium</button>
-                        <button onclick="setFilter('low')"
-                            class="filter-btn px-3 py-1 rounded-full text-sm font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition">Low</button>
-                        <button onclick="setFilter('completed')"
-                            class="filter-btn px-3 py-1 rounded-full text-sm font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition">Done</button>
-                    </div>
-
-                    <div class="flex justify-between items-center border-b pb-2">
-                        <h2 class="text-xl font-semibold text-gray-700">Tasks</h2>
-                        <button id="btn-clear-all" class="text-red-500 hover:text-red-700 text-sm font-semibold">Clear
-                            All</button>
+                    <div class="metric-row">
+                        <div><strong>250+</strong><span>Usaha Dibina</span></div>
+                        <div><strong>37</strong><span>Kota Dampingan</span></div>
+                        <div><strong>1.2M+</strong><span>Penerima Manfaat</span></div>
                     </div>
                 </div>
+                <div class="hero-card">
+                    <h3>Fokus Isu</h3>
+                    <ul>
+                        <li>Pendidikan inklusif dan literasi digital</li>
+                        <li>Pengelolaan sampah dan ekonomi sirkular</li>
+                        <li>Pemberdayaan UMKM perempuan</li>
+                        <li>Ketahanan pangan komunitas lokal</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-                <ul id="todo-list" class="space-y-3">
-                    <!-- Tasks will appear here -->
-                    <li class="text-center text-gray-400 py-4">No tasks yet...</li>
-                </ul>
-            </section>
+        <section id="tentang" class="section">
+            <div class="container two-col">
+                <div>
+                    <h2>Apa itu Wirausaha Sosial?</h2>
+                    <p>Wirausaha sosial adalah model usaha yang menyeimbangkan keuntungan finansial dengan misi sosial
+                        dan lingkungan. Melalui pendekatan bisnis berkelanjutan, solusi yang dihasilkan bisa bertahan
+                        lama, terukur, dan berdampak luas.</p>
+                    <p>SosioTumbuh hadir sebagai mitra strategis agar ide berdampak dapat tumbuh menjadi usaha yang
+                        sehat dan siap berkembang.</p>
+                </div>
+                <div class="panel">
+                    <h3>Kenapa bergabung dengan kami?</h3>
+                    <ul class="check-list">
+                        <li>Kurikulum praktis berbasis kasus lapangan</li>
+                        <li>Mentor dari praktisi dan investor dampak</li>
+                        <li>Akses jejaring komunitas, NGO, dan korporasi</li>
+                        <li>Monitoring dampak sosial berbasis data</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="program" class="section section-alt">
+            <div class="container">
+                <h2>Program Unggulan</h2>
+                <div class="cards">
+                    <article class="card">
+                        <h3>Social Startup Bootcamp</h3>
+                        <p>Program 8 minggu untuk memvalidasi masalah, merancang model bisnis berdampak, dan menyiapkan
+                            MVP.</p>
+                    </article>
+                    <article class="card">
+                        <h3>Impact Incubator</h3>
+                        <p>Pendampingan intensif 6 bulan untuk meningkatkan traksi pasar, pengukuran dampak, dan tata
+                            kelola tim.</p>
+                    </article>
+                    <article class="card">
+                        <h3>Funding Readiness</h3>
+                        <p>Kelas persiapan pendanaan dengan sesi pitch clinic, legal check, serta koneksi ke grant dan
+                            impact investor.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="dampak" class="section">
+            <div class="container">
+                <h2>Dampak yang Kami Ciptakan Bersama</h2>
+                <div class="stats-grid" id="stats-grid">
+                    <div class="stat-box"><span class="count" data-target="1200000">0</span><small>Penerima Manfaat</small></div>
+                    <div class="stat-box"><span class="count" data-target="185000">0</span><small>Ton Limbah Terkelola</small></div>
+                    <div class="stat-box"><span class="count" data-target="4200">0</span><small>Lapangan Kerja Tercipta</small></div>
+                    <div class="stat-box"><span class="count" data-target="92">0</span><small>Partner Organisasi</small></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimoni" class="section section-alt">
+            <div class="container">
+                <h2>Suara Alumni</h2>
+                <div class="testimonial-wrap">
+                    <blockquote id="testimonial-quote">“Program ini membuat kami paham cara membangun bisnis sosial
+                        yang tidak hanya idealis, tapi juga berkelanjutan.”</blockquote>
+                    <p id="testimonial-author">— Aisyah, Founder DaurBerkah</p>
+                    <div class="dots" id="testimonial-dots"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="section">
+            <div class="container">
+                <h2>Pertanyaan Umum</h2>
+                <div class="faq-list">
+                    <details>
+                        <summary>Siapa yang bisa mendaftar program ini?</summary>
+                        <p>Individu, komunitas, maupun startup tahap awal yang memiliki ide/produk untuk menyelesaikan
+                            isu sosial atau lingkungan.</p>
+                    </details>
+                    <details>
+                        <summary>Apakah harus sudah punya bisnis berjalan?</summary>
+                        <p>Tidak wajib. Kami menyediakan jalur untuk tahap ide dan tahap berkembang agar pembinaan lebih
+                            tepat sasaran.</p>
+                    </details>
+                    <details>
+                        <summary>Apakah tersedia beasiswa atau dukungan biaya?</summary>
+                        <p>Ya, tersedia skema beasiswa parsial maupun penuh untuk peserta terpilih berdasarkan dampak
+                            dan kesiapan tim.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <section id="kontak" class="section section-cta">
+            <div class="container two-col">
+                <div>
+                    <h2>Siap Memulai Perjalanan Dampakmu?</h2>
+                    <p>Isi formulir berikut dan tim kami akan menghubungi Anda maksimal 2x24 jam.</p>
+                </div>
+                <form id="join-form" class="form">
+                    <label>Nama Lengkap
+                        <input type="text" id="name" required>
+                    </label>
+                    <label>Email
+                        <input type="email" id="email" required>
+                    </label>
+                    <label>Fokus Isu
+                        <select id="focus" required>
+                            <option value="">Pilih fokus isu</option>
+                            <option>Pendidikan</option>
+                            <option>Lingkungan</option>
+                            <option>Ketahanan Pangan</option>
+                            <option>Pemberdayaan Ekonomi</option>
+                        </select>
+                    </label>
+                    <button type="submit" class="btn">Kirim Pendaftaran</button>
+                    <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-row">
+            <p>© 2026 SosioTumbuh. Bersama menumbuhkan dampak sosial berkelanjutan.</p>
+            <a href="#home">Kembali ke atas ↑</a>
         </div>
-    </div>
+    </footer>
 
-    <!-- Javascript External -->
     <script src="js/script.js"></script>
 </body>
 
